@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Credyt API",
-    "version": "1.0.0"
+    "title": "Credyt API (updated)",
+    "version": "1.0.1"
   },
   "tags": [
     {
@@ -38,6 +38,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BillingPortal_CreateSessionResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -48,6 +51,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -61,6 +67,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblem"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -101,6 +110,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProductCatalog_ProductDetails"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -137,6 +149,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProductCatalog_SimulateUsageResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -147,6 +162,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -160,6 +178,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblem"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -193,6 +214,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Customers_CreateCustomerResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -203,6 +227,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -216,6 +243,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblem"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -298,6 +328,9 @@
                     }
                   },
                   "description": "Paged response of CustomerSummary"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -331,6 +364,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Customers_GetCustomerResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -364,6 +400,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Wallets_GetWalletResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -397,6 +436,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Wallets_CreateAdjustmentResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -407,6 +449,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -420,6 +465,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblem"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -457,6 +505,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Wallets_CreateChargeResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -467,6 +518,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -480,6 +534,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblem"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -526,6 +583,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Wallets_GetTransactionResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -568,6 +628,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Wallets_GetAccountDetailsResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -597,6 +660,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TopUps_InitiateTopUpResponse"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -607,6 +673,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -620,6 +689,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblem"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -656,6 +728,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -669,6 +744,9 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblem"
+                },
+                "example": {
+                  "id": "example"
                 }
               }
             }
@@ -936,31 +1014,22 @@
             ]
           },
           "external_id": {
-            "type": "string",
-            "nullable": true,
             "description": "Your external identifier for the customer account. Must be unique across all customers.",
             "examples": [
               "18991"
-            ]
+            ],
+            "type": "string",
+            "nullable": true
           },
           "metadata": {
-            "anyOf": [
-              {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              },
-              {
-                "type": "null"
-              }
-            ],
             "description": "Additional metadata about the customer",
             "examples": [
               {
                 "referral_code": "X-12345-AB"
               }
-            ]
+            ],
+            "type": "object",
+            "nullable": true
           }
         }
       },
@@ -994,12 +1063,12 @@
             ]
           },
           "external_id": {
-            "type": "string",
-            "nullable": true,
             "description": "Your external identifier for the customer account",
             "examples": [
               "18991"
-            ]
+            ],
+            "type": "string",
+            "nullable": true
           },
           "name": {
             "type": "string",
@@ -1023,23 +1092,14 @@
             "description": "The date and time the customer was created"
           },
           "metadata": {
-            "anyOf": [
-              {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              },
-              {
-                "type": "null"
-              }
-            ],
             "description": "Additional metadata about the customer",
             "examples": [
               {
                 "referral_code": "X-12345-AB"
               }
-            ]
+            ],
+            "type": "object",
+            "nullable": true
           }
         },
         "allOf": [
@@ -1098,23 +1158,14 @@
             ]
           },
           "dimensions": {
-            "anyOf": [
-              {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              },
-              {
-                "type": "null"
-              }
-            ],
             "description": "The dimensions that were matched",
             "examples": [
               {
                 "model": "gpt-4-1"
               }
-            ]
+            ],
+            "type": "object",
+            "nullable": true
           },
           "usage_type": {
             "allOf": [
@@ -1128,61 +1179,60 @@
             ]
           },
           "volume_field": {
-            "type": "string",
-            "nullable": true,
             "description": "The event field used to determine the billable volume",
             "examples": [
               "input_tokens"
-            ]
+            ],
+            "type": "string",
+            "nullable": true
           },
           "input_units": {
-            "type": "number",
-            "nullable": true,
             "description": "The number of units used for calculation",
             "examples": [
               null
-            ]
+            ],
+            "type": "number",
+            "nullable": true
           },
           "input_volume": {
-            "type": "number",
-            "nullable": true,
             "description": "The volume used for calculation",
             "examples": [
               2353
-            ]
+            ],
+            "type": "number",
+            "nullable": true
           },
           "unit_price": {
-            "type": "number",
-            "nullable": true,
             "description": "The unit price for unit-based usage pricing",
             "examples": [
               null
-            ]
+            ],
+            "type": "number",
+            "nullable": true
           },
           "volume_rate": {
-            "type": "number",
-            "nullable": true,
             "description": "The rate for volume-based usage pricing",
             "examples": [
               1.5
-            ]
+            ],
+            "type": "number",
+            "nullable": true
           },
           "package_size": {
-            "type": "integer",
-            "nullable": true,
-            "format": "int64",
             "description": "Number of volume units per package",
             "examples": [
               1000000
-            ]
+            ],
+            "type": "integer",
+            "nullable": true
           },
           "description": {
-            "type": "string",
-            "nullable": true,
             "description": "The fee description presented to the customer",
             "examples": [
               "GPT 4.1 Input Tokens"
-            ]
+            ],
+            "type": "string",
+            "nullable": true
           },
           "amount": {
             "type": "number",
@@ -1450,12 +1500,12 @@
             ]
           },
           "description": {
-            "type": "string",
-            "nullable": true,
             "description": "A description of the user that will be displayed to the customer",
             "examples": [
               "Chat message completed"
-            ]
+            ],
+            "type": "string",
+            "nullable": true
           },
           "data": {
             "type": "object",
@@ -1526,13 +1576,13 @@
             "description": "The unique ID for the adjustment transaction. Requests with the same ID will be idempotent."
           },
           "account_name": {
-            "type": "string",
-            "nullable": true,
             "description": "The name of the account to make the adjustment against",
             "examples": [
               "default"
             ],
-            "default": "default"
+            "default": "default",
+            "type": "string",
+            "nullable": true
           },
           "asset": {
             "type": "string",
@@ -1550,12 +1600,12 @@
             ]
           },
           "description": {
-            "type": "string",
-            "nullable": true,
             "description": "A description that will be displayed to the customer",
             "examples": [
               "Monthly Subscription"
-            ]
+            ],
+            "type": "string",
+            "nullable": true
           },
           "reason": {
             "allOf": [
@@ -1628,13 +1678,13 @@
             "description": "Your unique ID for the charge transaction. Requests with the same ID will be idempotent."
           },
           "account_name": {
-            "type": "string",
-            "nullable": true,
             "description": "The name of the account to make the adjustment against",
             "examples": [
               "default"
             ],
-            "default": "default"
+            "default": "default",
+            "type": "string",
+            "nullable": true
           },
           "asset": {
             "type": "string",
@@ -1651,12 +1701,12 @@
             ]
           },
           "description": {
-            "type": "string",
-            "nullable": true,
             "description": "A description that will be displayed to the customer",
             "examples": [
               "Overage costs for GPT-4 usage"
-            ]
+            ],
+            "type": "string",
+            "nullable": true
           },
           "metadata": {
             "type": "object",
@@ -1671,45 +1721,44 @@
             ]
           },
           "input_units": {
-            "type": "number",
-            "nullable": true,
             "description": "The number of units used for calculation",
             "examples": [
               null
-            ]
+            ],
+            "type": "number",
+            "nullable": true
           },
           "input_volume": {
-            "type": "number",
-            "nullable": true,
             "description": "The volume used for calculation",
             "examples": [
               2652000
-            ]
+            ],
+            "type": "number",
+            "nullable": true
           },
           "unit_price": {
-            "type": "number",
-            "nullable": true,
             "description": "The unit price for unit-based usage pricing",
             "examples": [
               null
-            ]
+            ],
+            "type": "number",
+            "nullable": true
           },
           "volume_rate": {
-            "type": "number",
-            "nullable": true,
             "description": "The rate for volume-based usage pricing",
             "examples": [
               0.5
-            ]
+            ],
+            "type": "number",
+            "nullable": true
           },
           "package_size": {
-            "type": "integer",
-            "nullable": true,
-            "format": "int64",
             "description": "Number of volume units per package",
             "examples": [
               1000000
-            ]
+            ],
+            "type": "integer",
+            "nullable": true
           },
           "amount": {
             "type": "number",
@@ -1808,12 +1857,12 @@
             ]
           },
           "description": {
-            "type": "string",
-            "nullable": true,
             "description": "A description that will be displayed to the customer",
             "examples": [
               "Monthly Subscription"
-            ]
+            ],
+            "type": "string",
+            "nullable": true
           },
           "metadata": {
             "type": "object",
@@ -1834,10 +1883,9 @@
             "description": "The UTC date and time that the transaction was created"
           },
           "executed_at": {
+            "description": "The UTC data and time that the transaction was executed, if not pending",
             "type": "string",
-            "nullable": true,
-            "format": "date-time",
-            "description": "The UTC data and time that the transaction was executed, if not pending"
+            "nullable": true
           }
         }
       },
@@ -1949,5 +1997,6 @@
       "description": "Dev",
       "variables": {}
     }
-  ]
+  ],
+  "x-mintlify-forced-update": true
 }
