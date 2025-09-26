@@ -1,0 +1,95 @@
+---
+title: "Advanced Integration"
+description: "Once you’ve completed the Quick Start and tested top-ups, the next step is preparing for a production-ready integration. This phase is about fine-tuning your setup, validating operational flows, and ensuring alignment with Stripe requirements."
+---
+
+## Configure the Full Product Catalogue
+
+In Quick Start, you may have tested with a single product. Before launch, define your entire product catalogue in Credyt:
+
+- Create all products and features your platform will bill for. We can then mirror the setup into your production account.
+- Ensure each product has its rate plans and charges defined.
+- Validate pricing through the simulate usage endpoint before moving forward.
+
+## Connect Your Own Test Stripe Account
+
+During initial testing, all payments run through Credyt’s shared test account.
+
+Before moving closer to go-live, we advise that you connect your own test Stripe account. This step ensures your integration behaves the way it will in production, without needing a full Stripe live account.
+
+- Credyt will initiate an onboarding link.
+- You click through the Stripe flow (no KYC, payouts, or compliance required in test mode).
+- This account allows you to test:
+  - **Refunds** (initiate in Stripe, reflect in Credyt via adjustments)
+  - **Branding** (logo, colours, checkout look and feel)
+  - **Tax rules** (Stripe tax configuration)
+
+⚠️ **Note**: Branding can be safely tested and adjusted in pre-production. Refunds and Tax, however, have operational impact, so we recommend planning for these workflows in advance.
+
+## Implement and Test Refunds
+
+At this stage, refunds are not initiated through the Credyt API or back office. Instead, refunds are always executed through your payment provider (your PSP or Stripe, if you use Credyt’s built-in payments). It is the platform’s responsibility to notify Credyt so that the customer’s balance reflects the refund.
+
+There are two common cases:
+
+**Refunds with an External PSP**
+
+If your platform uses its own PSP for payments:
+
+1. Initiate the refund through your PSP’s dashboard or API.
+2. Notify Credyt of the refunded amount using the Adjustments API.
+   - Use a unique `transaction_id` and include `reason: "external_refund"`.
+
+**Example:**
+
+```
+curl -X POST <https://api.dev.credyt.ai/customers/:customer_id/wallet/adjustments> \\
+  -H "X-CREDYT-KEY: sk_test_123" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "transaction_id": "62d363c1-f803-4735-b9ad-8abf6f7b8c77",
+    "asset": "USD",
+    "amount": -20,
+    "reason": "external_refund"
+  }'
+```
+
+This subtracts \$20 from the customer’s fiat account balance.
+
+**Refunds with Credyt’s payment rails (Stripe)**
+
+If you use Credyt’s built-in payments processing (via Stripe):
+
+1. Operational staff initiate the refund in the Stripe Dashboard.
+   - Stripe handles payment reversal, receipts, and settlement.
+2. Notify Credyt of the refund through the Adjustments API, so the customer’s balance is updated.
+
+**Example:**
+
+```
+curl -X POST <https://api.dev.credyt.ai/customers/:customer_id/wallet/adjustments> \\
+  -H "X-CREDYT-KEY: sk_test_123" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "transaction_id": "234dd0d7-d4db-422b-9e52-af224c6c4654",
+    "asset": "USD",
+    "amount": -15,
+    "reason": "external_refund"
+  }'
+```
+
+**Best Practices**
+
+- Always send refunds as a negative adjustment with `reason: "external_refund"`.
+- Use a unique identifier for `transaction_id` that ties the refund to the original payment. The Adjustments API supports metadata, which you can use to attach identifiers or other relevant information to make reconciliation and traceability easier.
+- Keep refund amounts and currencies consistent with the original payment to avoid reconciliation issues.
+
+## Set Up Checkout Branding
+
+Stripe Checkout supports basic customisation. From your Stripe Dashboard, you can:
+
+- Add your logo
+- Set primary/secondary colours
+- Adjust button text if needed
+
+Apply branding so that top-up sessions triggered via the Billing Portal or Top-up API match your platform’s look and feel.
