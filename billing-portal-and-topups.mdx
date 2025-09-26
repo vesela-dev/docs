@@ -1,6 +1,112 @@
 ---
 title: "Billing portal and Top Ups"
 description: "Keeping wallets funded is critical for continuous product use. Credyt gives you two complementary ways to support top-ups - both powered by Stripe Checkout.
-
 *If your product includes alternative payment flows that you want to keep, be sure to read about Adjustments*"
 ---
+
+## Option 1: Billing Portal
+
+The simplest way for your customers to add funds is through the hosted Billing Portal.
+
+- Customers initiate top-ups directly in the portal.
+- The only integration step is generating a session link and redirecting the customer.
+- No signup is required on the customer side.
+- As a platform, you do not control the flow and have no visibility into the process.
+
+### More than just top-ups
+
+The Billing Portal is also a self-service billing centre for your customers:
+
+- Top-up manually whenever they want
+- Auto Top-up - balance refills automatically once it falls below a threshold (continuous usage, no service interruptions, more revenue)
+- Real-time balance visibility
+- Product usage breakdowns
+- Spend per product
+- Top-up history
+
+This makes the Billing Portal valuable even if you also implement the Top-up API. It saves you from building billing transparency and top-up management into your own platform.
+
+### Create a Billing Portal Session
+
+```
+curl -X POST <https://api.dev.credyt.ai/billing-portal/sessions> \\
+  -H "X-CREDYT-KEY: sk_test_123" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "customer_id": "cust_473cr1y0ghbyc3m1yfbwvn3nxx",
+    "return_url": "<https://yourapp.com/account>",
+    "failure_url": "<https://yourapp.com/callbacks/credyt-failure>"
+  }'
+```
+
+➡️ Response:
+
+```
+{
+  "redirect_url": "<https://billing.credyt.ai/customer-portal/sign-in?token=>...",
+  "expires_at": "2025-09-16T13:00:00Z"
+}
+```
+
+Redirect the customer to `redirect_url`. All top-ups and account views happen inside the portal. If you are using the Billing Portal, you may also need to configure callback URLs to handle session expiry or refresh.
+
+⚠️ Note: For test integrations, all payments are processed through a shared test Stripe account to avoid onboarding delays. Later, we can setup your own Stripe test account to test branding and operations.
+
+## Option 2: Top-up API
+
+The Top-up API is used when the platform wants to control the entry point to the flow. Useful when you want to expose multiple CTAs for funding the wallet (e.g. banners, buttons).
+
+- The platform collects the amount to top up in its own UI.
+- The backend calls the Top-up API to create a checkout session.
+- Credyt API returns a `redirect_url` to Stripe Checkout.
+- After payment, the customer is returned to the platform’s `return_url` or `cancel_url`.
+
+### Create a Top-up Session
+
+```
+curl -X POST <https://api.dev.credyt.ai/top-ups> \\
+  -H "X-CREDYT-KEY: sk_test_123" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "customer_id": "cust_473cr1y0ghbyc3m1yfbwvn3nxx",
+    "amount": 20,
+    "currency": "USD",
+    "description": "Image generation credits",
+    "return_url": "<https://yourapp.com/billing/success>",
+    "cancel_url": "<https://yourapp.com/billing/cancel>"
+  }'
+```
+
+➡️ Response:
+
+```
+{
+  "id": "top_473cr1y0ghbyc3m1yfbwvn3nxx",
+  "status": "initiated",
+  "redirect_url": "<https://pay.credyt.ai/checkout/xyz>",
+  "created_at": "2025-09-16T12:10:00Z"
+}
+```
+
+The platform redirects the customer to `redirect_url` to complete the payment.
+
+---
+
+## Checking the Wallet
+
+Balances are updated automatically once a top-up succeeds. The platform can query them at any time:
+
+```
+curl <https://api.dev.credyt.ai/customers/cust_473cr1y0ghbyc3m1yfbwvn3nxx/wallet> \\
+  -H "X-CREDYT-KEY: sk_test_123"
+```
+
+➡️ Example:
+
+```
+{
+  "accounts": [
+    { "id": "default:usd", "available": 70.00 }
+  ]
+}
+```
