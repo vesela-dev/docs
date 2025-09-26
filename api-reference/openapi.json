@@ -1,217 +1,1953 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.3",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
+    "title": "Credyt API",
     "version": "1.0.0"
   },
-  "servers": [
+  "tags": [
     {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
+      "name": "Product Catalog"
+    },
     {
-      "bearerAuth": []
+      "name": "Customers"
+    },
+    {
+      "name": "Wallets"
+    },
+    {
+      "name": "Top-ups"
+    },
+    {
+      "name": "Usage"
+    },
+    {
+      "name": "Billing Portal"
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+    "/billing-portal/sessions": {
+      "post": {
+        "operationId": "BillingPortal_create_portal_session",
+        "summary": "Create a portal session",
+        "description": "Creates a new session for the customer billing portal.",
+        "parameters": [],
         "responses": {
-          "200": {
-            "description": "Plant response",
+          "201": {
+            "description": "The request has succeeded and a new resource has been created as a result.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
+                  "$ref": "#/components/schemas/BillingPortal_CreateSessionResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Unexpected error",
+            "description": "The server could not understand the request due to invalid syntax.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblem"
                 }
               }
             }
           }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
+        },
+        "tags": [
+          "Billing Portal"
+        ],
         "requestBody": {
-          "description": "Plant to add to the store",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "$ref": "#/components/schemas/BillingPortal_CreateSessionRequest"
               }
             }
           }
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/catalog/products/{productId}/{version}": {
+      "get": {
+        "operationId": "ProductCatalog_getProduct",
+        "summary": "Get a product's details",
+        "description": "Get the details of a product.",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "$ref": "#/components/parameters/ProductCatalog.ProductRouteParams.productId"
+          },
+          {
+            "$ref": "#/components/parameters/ProductCatalog.ProductRouteParams.version"
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "200": {
+            "description": "The request has succeeded.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/ProductCatalog_ProductDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "404": {
+            "description": "The server cannot find the requested resource."
+          }
+        },
+        "tags": [
+          "Product Catalog"
+        ]
+      }
+    },
+    "/catalog/products/{productId}/{version}/simulate-usage": {
+      "post": {
+        "operationId": "ProductCatalog_simulateUsage",
+        "summary": "Simulate usage",
+        "description": "Simulate usage calculation for a product by sending\ntest usage events",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProductCatalog.ProductRouteParams.productId"
+          },
+          {
+            "$ref": "#/components/parameters/ProductCatalog.ProductRouteParams.version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCatalog_SimulateUsageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblem"
                 }
               }
             }
           }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
+        },
+        "tags": [
+          "Product Catalog"
+        ],
         "requestBody": {
-          "description": "Plant added to the store",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/Usage_UsageRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers": {
+      "post": {
+        "operationId": "CustomersOps_createCustomer",
+        "summary": "Create a customer",
+        "description": "Create a new customer",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "The request has succeeded and a new resource has been created as a result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customers_CreateCustomerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblem"
+                }
               }
             }
           }
         },
+        "tags": [
+          "Customers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customers_CreateCustomerRequest"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "CustomersOps_getCustomers",
+        "summary": "List customers",
+        "description": "Returns a paged list of customers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PagingParameters.offset"
+          },
+          {
+            "$ref": "#/components/parameters/PagingParameters.limit"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "items",
+                    "total_count",
+                    "limit",
+                    "offset"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Customers_CustomerSummary"
+                      },
+                      "minItems": 0,
+                      "description": "The current page of items"
+                    },
+                    "total_count": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0,
+                      "description": "The total count of items",
+                      "examples": [
+                        145
+                      ]
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 1,
+                      "description": "The number of items to return",
+                      "examples": [
+                        20
+                      ]
+                    },
+                    "offset": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 0,
+                      "description": "The number of items to offset",
+                      "examples": [
+                        0
+                      ]
+                    }
+                  },
+                  "description": "Paged response of CustomerSummary"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Customers"
+        ]
+      }
+    },
+    "/customers/{customerId}": {
+      "get": {
+        "operationId": "CustomersOps_getCustomer",
+        "summary": "Get a customer's details",
+        "description": "Returns a customer's details",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the customer to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customers_GetCustomerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "404": {
+            "description": "The server cannot find the requested resource."
+          }
+        },
+        "tags": [
+          "Customers"
+        ]
+      }
+    },
+    "/customers/{customerId}/wallet": {
+      "get": {
+        "operationId": "CustomerWalletOps_getCustomerWallet",
+        "summary": "Get a customer's wallet",
+        "description": "Returns the available balances of the accounts in a customer's wallet",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Wallets.CustomerWalletParams"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallets_GetWalletResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "404": {
+            "description": "The server cannot find the requested resource."
+          }
+        },
+        "tags": [
+          "Wallets"
+        ]
+      }
+    },
+    "/customers/{customerId}/wallet/adjustments": {
+      "post": {
+        "operationId": "CustomerWalletOps_createAdjustment",
+        "summary": "Create adjustment",
+        "description": "Adjustments allow you to directly impact the balance of an account outside of normal usage processing.\n\nThis might be necessary to reflect out-of-bound operations such as refunds, or if you operate a hybrid setup and collect funds outside of Credyt.\n\nEvery adjustment must have a corresponding `reason` that influences how revenue is ultimately recognized.\n\nThe adjustment `transaction_id` is used as an idempotency key to ensure safe retries.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Wallets.CustomerWalletParams"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The request has succeeded and a new resource has been created as a result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallets_CreateAdjustmentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblem"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Wallets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wallets_CreateAdjustmentRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/wallet/charges": {
+      "post": {
+        "operationId": "CustomerWalletOps_createCharge",
+        "summary": "Create a charge",
+        "description": "Charges allow you to charge ad-hoc fees to an account outside of normal usage processing.\n\nThe charge `transaction_id` is used as an idempotency key to ensure safe retries.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Wallets.CustomerWalletParams"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The request has succeeded and a new resource has been created as a result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallets_CreateChargeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblem"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Wallets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wallets_CreateChargeRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/wallet/transactions/{transactionId}": {
+      "get": {
+        "operationId": "CustomerWalletOps_getTransaction",
+        "summary": "Get a wallet transaction",
+        "description": "Returns the details of a wallet transaction",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Wallets.CustomerWalletParams"
+          },
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the transaction",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallets_GetTransactionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "404": {
+            "description": "The server cannot find the requested resource."
+          }
+        },
+        "tags": [
+          "Wallets"
+        ]
+      }
+    },
+    "/customers/{customerId}/wallet/{accountId}": {
+      "get": {
+        "operationId": "CustomerWalletOps_getAccount",
+        "summary": "Get a customer's wallet account",
+        "description": "Returns the detailed balances of a specific account in a customer's wallet",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Wallets.CustomerWalletParams"
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the account in the wallet",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallets_GetAccountDetailsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "404": {
+            "description": "The server cannot find the requested resource."
+          }
+        },
+        "tags": [
+          "Wallets"
+        ]
+      }
+    },
+    "/top-ups": {
+      "post": {
+        "operationId": "TopUpsOps_initiateTopUp",
+        "summary": "Initiate top-up",
+        "description": "Initiates a top-up to a customer's wallet.",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "The request has succeeded and a new resource has been created as a result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopUps_InitiateTopUpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblem"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Top-ups"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopUps_InitiateTopUpRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usage": {
+      "post": {
+        "operationId": "Usage_send_usage",
+        "summary": "Send usage events",
+        "description": "Usage events are the events that occur in your systems that you would like to bill or calculate costs for.\nEach usage event has a unique identifier that is used as an idempotency key to ensure safe retries.\n\nEvents that are to be billed should be accompanied by a customer identifier in order for us to match the usage\nagainst the customer's pricing.",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful."
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized."
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblem"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Usage"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usage_UsageRequest"
+              }
+            }
           }
         }
       }
     }
   },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
   "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
+    "parameters": {
+      "PagingParameters.limit": {
+        "name": "limit",
+        "in": "query",
+        "required": true,
+        "description": "The number of items to return",
+        "schema": {
+          "type": "integer",
+          "format": "int64",
+          "default": 100
+        },
+        "explode": false
+      },
+      "PagingParameters.offset": {
+        "name": "offset",
+        "in": "query",
+        "required": true,
+        "description": "The number of items to offset",
+        "schema": {
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "explode": false
+      },
+      "ProductCatalog.ProductRouteParams.productId": {
+        "name": "productId",
+        "in": "path",
+        "required": true,
+        "description": "The ID of the product to retrieve",
+        "schema": {
+          "type": "string"
         }
       },
-      "NewPlant": {
+      "ProductCatalog.ProductRouteParams.version": {
+        "name": "version",
+        "in": "path",
+        "required": true,
+        "description": "The version of the product to retrieve. Use `latest` for the latest version.",
+        "schema": {
+          "type": "string",
+          "default": "latest"
+        }
+      },
+      "Wallets.CustomerWalletParams": {
+        "name": "customerId",
+        "in": "path",
+        "required": true,
+        "description": "The ID of the customer",
+        "schema": {
+          "$ref": "#/components/schemas/customerId"
+        }
+      }
+    },
+    "schemas": {
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type. When dereferenced, it should provide human-readable documentation.",
+            "examples": [
+              "https://api.credyt.ai/problems/problem"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. Should not change from occurrence to occurrence.",
+            "examples": [
+              "One or more validation errors occurred."
+            ]
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The HTTP status code generated by the origin server for this occurrence of the problem.",
+            "examples": [
+              400
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "examples": [
+              "See the errors property for details."
+            ]
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may yield further information if dereferenced.",
+            "examples": [
+              "/usage"
+            ]
+          }
+        },
         "allOf": [
           {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
             "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+            "additionalProperties": {}
+          }
+        ],
+        "description": "RFC 7807-compatible problem details object.\nUse as the body for error responses with media type `application/problem+json`.\nSee: https://datatracker.ietf.org/doc/html/rfc7807"
+      },
+      "ValidationProblem": {
+        "type": "object",
+        "required": [
+          "errors"
+        ],
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
+            },
+            "description": "A mapping of field names (or parameter paths) to one or more validation error messages.",
+            "examples": [
+              {
+                "name": [
+                  "name is required."
+                ]
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetails"
+          }
+        ],
+        "description": "Validation problem details aligned with ASP.NET Core's `ValidationProblemDetails`.\n\nThis extends RFC 7807 `ProblemDetails` with an `errors` bag of `string[]` arrays.\nASP.NET Core often returns this for 400/422 validation failures.",
+        "examples": [
+          {
+            "type": "https://api.credyt.ai/problems/validation-error",
+            "title": "One or more validation errors occurred.",
+            "status": 422,
+            "detail": "See the errors property for details.",
+            "instance": "/usage",
+            "errors": {
+              "name": [
+                "name is required."
+              ]
             }
           }
         ]
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+      "Versions": {
+        "type": "string",
+        "enum": [
+          "1.0.0"
+        ]
+      },
+      "currency": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 3,
+        "description": "An ISO 3166 Alpha-3 Currency Code",
+        "examples": [
+          "USD"
+        ]
+      },
+      "customerId": {
+        "type": "string",
+        "description": "The customer identifier. If providing an external identifier it must be prefixed with `ext_`",
+        "examples": [
+          "cust_473cr1y0ghbyc3m1yfbwvn3nxx"
+        ]
+      },
+      "uuid": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "BillingPortal_CreateSessionRequest": {
         "type": "object",
+        "required": [
+          "customer_id",
+          "return_url",
+          "failure_url"
+        ],
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+          "customer_id": {
+            "$ref": "#/components/schemas/customerId"
           },
-          "message": {
-            "type": "string"
+          "return_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL the customer is redirected to when returning to your site from the billing portal",
+            "examples": [
+              "https://midjourney.com/account"
+            ]
+          },
+          "failure_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL the customer is redirected to when a failure occurs",
+            "examples": [
+              "https://midjourney.com/callbacks/credyt-failure"
+            ]
+          }
+        },
+        "description": "The session creation parameters"
+      },
+      "BillingPortal_CreateSessionResponse": {
+        "type": "object",
+        "required": [
+          "redirect_url",
+          "expires_at"
+        ],
+        "properties": {
+          "redirect_url": {
+            "type": "string",
+            "description": "The authenticated billing portal URL for the customer",
+            "examples": [
+              "https://billing.credyt.ai/customer-portal/sign-in?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The UTC date and time that the portal session expires"
+          }
+        },
+        "description": "The billing portal session details"
+      },
+      "Customers_CreateCustomerRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the customer",
+            "examples": [
+              "John Doe"
+            ]
+          },
+          "external_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Your external identifier for the customer account. Must be unique across all customers.",
+            "examples": [
+              "18991"
+            ]
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Additional metadata about the customer",
+            "examples": [
+              {
+                "referral_code": "X-12345-AB"
+              }
+            ]
           }
         }
+      },
+      "Customers_CreateCustomerResponse": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique Credyt identifier for the customer account",
+            "examples": [
+              "cust_473cr1y0ghbyc3m1yfbwvn3nxx"
+            ]
+          }
+        }
+      },
+      "Customers_CustomerSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique Credyt identifier for the customer account",
+            "examples": [
+              "cust_473cr1y0ghbyc3m1yfbwvn3nxx"
+            ]
+          },
+          "external_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Your external identifier for the customer account",
+            "examples": [
+              "18991"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the customer",
+            "examples": [
+              "John Doe"
+            ]
+          }
+        },
+        "description": "Represents a customer"
+      },
+      "Customers_GetCustomerResponse": {
+        "type": "object",
+        "required": [
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time the customer was created"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Additional metadata about the customer",
+            "examples": [
+              {
+                "referral_code": "X-12345-AB"
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Customers_CustomerSummary"
+          }
+        ]
+      },
+      "ProductCatalog_CalculatedFee": {
+        "type": "object",
+        "required": [
+          "price_id",
+          "price_name",
+          "currency",
+          "usage_id",
+          "event_type",
+          "usage_type",
+          "amount"
+        ],
+        "properties": {
+          "price_id": {
+            "type": "string",
+            "description": "The ID of the price to which this fee relates",
+            "examples": [
+              "prc_4asvwjbgbypk6d9z3xp95ttrc8"
+            ]
+          },
+          "price_name": {
+            "type": "string",
+            "description": "The name of the price to which this fee relates",
+            "examples": [
+              "Text Processing Input Tokens"
+            ]
+          },
+          "currency": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/currency"
+              }
+            ],
+            "description": "The billing currency"
+          },
+          "usage_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              }
+            ],
+            "description": "The identifier of the priced usage event"
+          },
+          "event_type": {
+            "type": "string",
+            "description": "The usage event type that was matched",
+            "examples": [
+              "message_completed"
+            ]
+          },
+          "dimensions": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The dimensions that were matched",
+            "examples": [
+              {
+                "model": "gpt-4-1"
+              }
+            ]
+          },
+          "usage_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductCatalog_UsageType"
+              }
+            ],
+            "description": "How usage was measured",
+            "examples": [
+              "volume"
+            ]
+          },
+          "volume_field": {
+            "type": "string",
+            "nullable": true,
+            "description": "The event field used to determine the billable volume",
+            "examples": [
+              "input_tokens"
+            ]
+          },
+          "input_units": {
+            "type": "number",
+            "nullable": true,
+            "description": "The number of units used for calculation",
+            "examples": [
+              null
+            ]
+          },
+          "input_volume": {
+            "type": "number",
+            "nullable": true,
+            "description": "The volume used for calculation",
+            "examples": [
+              2353
+            ]
+          },
+          "unit_price": {
+            "type": "number",
+            "nullable": true,
+            "description": "The unit price for unit-based usage pricing",
+            "examples": [
+              null
+            ]
+          },
+          "volume_rate": {
+            "type": "number",
+            "nullable": true,
+            "description": "The rate for volume-based usage pricing",
+            "examples": [
+              1.5
+            ]
+          },
+          "package_size": {
+            "type": "integer",
+            "nullable": true,
+            "format": "int64",
+            "description": "Number of volume units per package",
+            "examples": [
+              1000000
+            ]
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "The fee description presented to the customer",
+            "examples": [
+              "GPT 4.1 Input Tokens"
+            ]
+          },
+          "amount": {
+            "type": "number",
+            "description": "The fee amount in the billing currency",
+            "examples": [
+              0.003529
+            ]
+          }
+        }
+      },
+      "ProductCatalog_ProductDetails": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "version"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the product",
+            "examples": [
+              "prd_4jkgtzffbf9pzem7dgfhdeztwa"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the product",
+            "examples": [
+              "OpenAI GPT"
+            ]
+          },
+          "version": {
+            "type": "number",
+            "description": "The version of the product",
+            "examples": [
+              3
+            ]
+          }
+        }
+      },
+      "ProductCatalog_SimulateUsageResponse": {
+        "type": "object",
+        "required": [
+          "fees"
+        ],
+        "properties": {
+          "fees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCatalog_CalculatedFee"
+            },
+            "description": "The fees that were calculated for the provided usage events"
+          }
+        }
+      },
+      "ProductCatalog_UsageType": {
+        "type": "string",
+        "enum": [
+          "unit",
+          "volume",
+          "unit_and_volume",
+          "custom"
+        ]
+      },
+      "TopUps_InitiateTopUpRequest": {
+        "type": "object",
+        "required": [
+          "customer_id",
+          "amount",
+          "currency"
+        ],
+        "properties": {
+          "customer_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/customerId"
+              }
+            ],
+            "description": "The ID of the customer to top-up"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "description": "The amount to top-up in the major currency unit",
+            "examples": [
+              50
+            ]
+          },
+          "currency": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/currency"
+              }
+            ],
+            "description": "The currency of the top-up"
+          },
+          "description": {
+            "type": "string",
+            "description": "A customer-facing description of the top-up",
+            "examples": [
+              "Image generation credits"
+            ]
+          },
+          "destination": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TopUps_TopUpDestination"
+              }
+            ],
+            "description": "The destination wallet account to top-up. If not provided the top-up will go to the customer's default wallet account in the top-up currency"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "For credit top-ups, the UTC date and time when the generated credit grant will expire."
+          },
+          "return_url": {
+            "type": "string",
+            "description": "The URL to redirect the customer to after completing the top-up. Leaving this empty will redirect the customer to the billing portal",
+            "examples": [
+              "https://midjourney.com/callbacks/top-up-completed"
+            ]
+          },
+          "cancel_url": {
+            "type": "string",
+            "description": "The URL to redirect the customer to if they cancel the top-up. Leaving this empty will redirect the customer to the billing portal",
+            "examples": [
+              "https://midjourney.com/callbacks/top-ups/top-up-cancelled"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Additional metadata about the top-up",
+            "examples": [
+              {
+                "order_id": "order_12345"
+              }
+            ]
+          }
+        }
+      },
+      "TopUps_InitiateTopUpResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "redirect_url",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique Credyt identifier for the top-up",
+            "examples": [
+              "top_473cr1y0ghbyc3m1yfbwvn3nxx"
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TopUps_TopUpStatus"
+              }
+            ],
+            "description": "The status of the top-up"
+          },
+          "redirect_url": {
+            "type": "string",
+            "description": "The URL to redirect the customer to complete the top-up",
+            "examples": [
+              "https://pay.credyt.ai/checkout/xyz"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The UTC date and time that the top-up was created"
+          }
+        }
+      },
+      "TopUps_TopUpDestination": {
+        "type": "object",
+        "properties": {
+          "account_name": {
+            "type": "string",
+            "description": "The name of the wallet account to top-up. Defaults to `default`",
+            "examples": [
+              "default"
+            ],
+            "default": "default"
+          },
+          "asset": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/currency"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "The asset of the wallet account to top-up. Defaults to the currency of the top-up",
+            "examples": [
+              "IMG_TOKENS"
+            ]
+          },
+          "exchange_rate": {
+            "type": "number",
+            "format": "decimal",
+            "description": "The exchange rate to use when converting the top-up amount to a customer wallet asset. Defaults to the custom asset's configured exchange rate.",
+            "examples": [
+              1000000
+            ]
+          }
+        }
+      },
+      "TopUps_TopUpStatus": {
+        "type": "string",
+        "enum": [
+          "initiated",
+          "pending",
+          "succeeded",
+          "failed"
+        ]
+      },
+      "Usage_UsageEvent": {
+        "type": "object",
+        "required": [
+          "id",
+          "customer_id",
+          "event_type",
+          "occurred_at"
+        ],
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              }
+            ],
+            "description": "Your unique ID for the usage record. Requests with the same ID will be idempotent."
+          },
+          "customer_id": {
+            "$ref": "#/components/schemas/customerId"
+          },
+          "event_type": {
+            "type": "string",
+            "description": "The type of event",
+            "examples": [
+              "message_completed"
+            ]
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The UTC date and time that the event occurred. Historical events must be within the acceptable grace period."
+          },
+          "subject": {
+            "type": "string",
+            "description": "The subject to which this usage event relates. This allows for additional context to be shared within Credyt",
+            "examples": [
+              "chat_5f53d23a4958"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "A description of the user that will be displayed to the customer",
+            "examples": [
+              "Chat message completed"
+            ]
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "description": "Additional data associated with the event that may be used as part of pricing calculations to provide additional context",
+            "examples": [
+              {
+                "model": "gpt-4-1",
+                "input_tokens": 2353,
+                "output_tokens": 34697
+              }
+            ]
+          }
+        },
+        "description": "Represents a product usage event"
+      },
+      "Usage_UsageRequest": {
+        "type": "object",
+        "required": [
+          "events"
+        ],
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Usage_UsageEvent"
+            },
+            "description": "The usage events"
+          }
+        }
+      },
+      "Wallets_AdjustmentReason": {
+        "type": "string",
+        "enum": [
+          "gift",
+          "external_topup",
+          "external_refund",
+          "other"
+        ]
+      },
+      "Wallets_CreateAdjustmentRequest": {
+        "type": "object",
+        "required": [
+          "transaction_id",
+          "asset",
+          "amount",
+          "reason"
+        ],
+        "properties": {
+          "transaction_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              }
+            ],
+            "description": "The unique ID for the adjustment transaction. Requests with the same ID will be idempotent."
+          },
+          "account_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "The name of the account to make the adjustment against",
+            "examples": [
+              "default"
+            ],
+            "default": "default"
+          },
+          "asset": {
+            "type": "string",
+            "description": "The asset of the adjustment",
+            "examples": [
+              "USD"
+            ]
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "description": "The adjustment amount. Specify a positive amount to credit the account and a negative amount to debit the account.",
+            "examples": [
+              25
+            ]
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "A description that will be displayed to the customer",
+            "examples": [
+              "Monthly Subscription"
+            ]
+          },
+          "reason": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Wallets_AdjustmentReason"
+              }
+            ],
+            "description": "The reason for the adjustment",
+            "examples": [
+              "external_topup"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "For credit adjustments, the UTC date and time when the generated credit grant will expire."
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Additional context about the adjustment",
+            "examples": [
+              {
+                "psp": "stripe",
+                "payment_intent": "pi_3RjbbNJNSIruR1rb0GwMGpH0"
+              }
+            ]
+          }
+        },
+        "description": "Represents a request for an adjustment to an account's balance"
+      },
+      "Wallets_CreateAdjustmentResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              }
+            ],
+            "description": "Your unique ID for the adjustment transaction. Requests with the same ID will be idempotent."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The UTC date and time that the transaction was created"
+          }
+        }
+      },
+      "Wallets_CreateChargeRequest": {
+        "type": "object",
+        "required": [
+          "transaction_id",
+          "asset",
+          "amount"
+        ],
+        "properties": {
+          "transaction_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              }
+            ],
+            "description": "Your unique ID for the charge transaction. Requests with the same ID will be idempotent."
+          },
+          "account_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "The name of the account to make the adjustment against",
+            "examples": [
+              "default"
+            ],
+            "default": "default"
+          },
+          "asset": {
+            "type": "string",
+            "description": "The asset of the adjustment",
+            "examples": [
+              "USD"
+            ]
+          },
+          "subject": {
+            "type": "string",
+            "description": "The subject to which this charge relates. This allows for additional context to be shared within Credyt",
+            "examples": [
+              "chat_5f53d23a4958"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "A description that will be displayed to the customer",
+            "examples": [
+              "Overage costs for GPT-4 usage"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Additional context about the charge",
+            "examples": [
+              {
+                "model": "gpt-4-1"
+              }
+            ]
+          },
+          "input_units": {
+            "type": "number",
+            "nullable": true,
+            "description": "The number of units used for calculation",
+            "examples": [
+              null
+            ]
+          },
+          "input_volume": {
+            "type": "number",
+            "nullable": true,
+            "description": "The volume used for calculation",
+            "examples": [
+              2652000
+            ]
+          },
+          "unit_price": {
+            "type": "number",
+            "nullable": true,
+            "description": "The unit price for unit-based usage pricing",
+            "examples": [
+              null
+            ]
+          },
+          "volume_rate": {
+            "type": "number",
+            "nullable": true,
+            "description": "The rate for volume-based usage pricing",
+            "examples": [
+              0.5
+            ]
+          },
+          "package_size": {
+            "type": "integer",
+            "nullable": true,
+            "format": "int64",
+            "description": "Number of volume units per package",
+            "examples": [
+              1000000
+            ]
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "description": "The charge amount",
+            "exclusiveMinimum": 0,
+            "examples": [
+              1.326
+            ]
+          }
+        }
+      },
+      "Wallets_CreateChargeResponse": {
+        "type": "object"
+      },
+      "Wallets_GetAccountDetailsResponse": {
+        "type": "object",
+        "required": [
+          "pending_in",
+          "pending_out"
+        ],
+        "properties": {
+          "pending_in": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Pending incoming transactions",
+            "examples": [
+              500
+            ]
+          },
+          "pending_out": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Pending outgoing transactions",
+            "examples": [
+              100
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Wallets_WalletAccountSummary"
+          }
+        ]
+      },
+      "Wallets_GetTransactionResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "account_id",
+          "asset",
+          "amount",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              }
+            ],
+            "description": "The unique ID of the adjustment transaction"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Wallets_TransactionType"
+              }
+            ],
+            "description": "The type of transaction",
+            "examples": [
+              "adjustment"
+            ]
+          },
+          "account_id": {
+            "type": "string",
+            "description": "The ID of the account the transaction was executed against",
+            "examples": [
+              "default:usd"
+            ]
+          },
+          "asset": {
+            "type": "string",
+            "description": "The asset of the adjustment",
+            "examples": [
+              "USD"
+            ]
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "description": "The transaction amount",
+            "examples": [
+              10000
+            ]
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "A description that will be displayed to the customer",
+            "examples": [
+              "Monthly Subscription"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Additional context about the transaction",
+            "examples": [
+              {
+                "psp": "stripe",
+                "payment_intent": "pi_3RjbbNJNSIruR1rb0GwMGpH0"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The UTC date and time that the transaction was created"
+          },
+          "executed_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "The UTC data and time that the transaction was executed, if not pending"
+          }
+        }
+      },
+      "Wallets_GetWalletResponse": {
+        "type": "object",
+        "required": [
+          "accounts"
+        ],
+        "properties": {
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wallets_WalletAccountSummary"
+            },
+            "description": "The asset accounts within the customer's wallet"
+          }
+        },
+        "examples": [
+          {
+            "accounts": [
+              {
+                "id": "default:usd",
+                "name": "default",
+                "asset": "USD",
+                "available": 14.566678
+              },
+              {
+                "id": "default:tok",
+                "name": "default",
+                "asset": "TOK",
+                "available": 993450234
+              }
+            ]
+          }
+        ]
+      },
+      "Wallets_TransactionType": {
+        "type": "string",
+        "enum": [
+          "adjustment",
+          "fee"
+        ]
+      },
+      "Wallets_WalletAccountSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "asset",
+          "available"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the account within the wallet",
+            "examples": [
+              "default:usd"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the account",
+            "examples": [
+              "default"
+            ]
+          },
+          "asset": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/currency"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "The currency of asset the account holds",
+            "examples": [
+              "USD"
+            ]
+          },
+          "available": {
+            "type": "number",
+            "format": "decimal",
+            "description": "The available balance",
+            "examples": [
+              14.566678
+            ]
+          }
+        },
+        "description": "Provides a summary of a wallet asset account"
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-CREDYT-KEY"
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "https://api.credyt.ai",
+      "description": "Production",
+      "variables": {}
+    },
+    {
+      "url": "https://api.dev.credyt.ai",
+      "description": "Dev",
+      "variables": {}
+    }
+  ]
 }
