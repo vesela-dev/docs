@@ -18,7 +18,9 @@
             "pages": [
               "index",
               "quickstart",
-              "development"
+              "development",
+              "billing-portal-and-topups",
+              "advanced-integration"
             ]
           },
           {
