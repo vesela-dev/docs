@@ -1,54 +1,143 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "This guide walks you through creating a customer, adding credits to their balance, sending usage, and watching their wallet balance update."
 ---
 
 ## Get started in three steps
 
-Get your documentation site running locally and make your first customization.
+You’ll need an **API key** (X-CREDYT-KEY) from your Credyt account.
 
-### Step 1: Set up your local environment
+### Step 1: Create a customer
+
+To start billing, you first register the customer with Credyt.
+
+We keep it minimal (just a name required), but it’s best to include an external reference for your own records.
+
+```
+curl -X POST <https://api.dev.credyt.ai/customers> \\
+  -H "X-CREDYT-KEY: sk_test_123" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "Acme AI",
+    "external_id": "ext_acme_001"
+  }'
+```
+
+➡️ Response:
+
+```
+{ "id": "cust_473cr1y0ghbyc3m1yfbwvn3nxx" }
+```
 
 <AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
+  <Accordion title="(Optional) Simulate usage">
+    Preview how usage would be priced before touching balances.
+
+    Great for validating your product setup or experimenting with pricing. No balance changes here, just a **preview** of what Credyt would charge.
+
+    ```bash
+    curl -X POST https://api.dev.credyt.ai/catalog/products/prd_test/latest/simulate-usage \
+    -H "X-CREDYT-KEY: sk_test_123" \
+    -H "Content-Type: application/json" \
+    -d '{
+    "events": [
+      {
+        "id": "101ee10e-3f95-4235-9f3e-976b0b01f3c4",
+        "customer_id": "cust_473cr1y0ghbyc3m1yfbwvn3nxx",
+        "event_type": "message_completed",
+        "occurred_at": "2025-09-16T12:00:00Z",
+        "data": {
+          "model": "gpt-4-1",
+          "input_tokens": 1200,
+          "output_tokens": 800
+        }
+      }
+    ]
+    }'
+    ```
+
+    ➡️ Response:
+
+    ```json
+    {
+      "fees": [
+        { "price_name": "GPT 4.1 Input Tokens", "amount": 0.003529, "currency": "USD" }
+      ]
+    }
+    ```
   </Accordion>
 </AccordionGroup>
 
-### Step 2: Deploy your changes
+### Step 2: Top Up the Wallet
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+Give your test customer some credits without going through a full payment flow.
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+This endpoint also handles balance changes outside of Credyt (e.g. external PSP payments, refunds, or promotional credits).
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+```
+curl -X POST <https://api.dev.credyt.ai/customers/cust_473cr1y0ghbyc3m1yfbwvn3nxx/wallet/adjustments> \\
+  -H "X-CREDYT-KEY: sk_test_123" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "transaction_id": "016bb728-bb69-4c9a-b2c9-29a4a6cf332d",
+    "asset": "USD",
+    "amount": 50,
+    "reason": "external_topup"
+  }'
+```
 
-### Step 3: Go live
+---
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
+### Step 3: Send Real Usage
+
+Submit actual usage events (e.g. API calls, tokens processed). Billable events will be deducted from the wallet
+
+Each event has a unique ID for idempotency, and billing is applied in real time.
+
+```
+curl -X POST <https://api.dev.credyt.ai/usage> \\
+  -H "X-CREDYT-KEY: sk_test_123" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "events": [
+      {
+        "id": "843772b7-9df4-4776-9f63-d3dce4efcaf4",
+        "customer_id": "cust_473cr1y0ghbyc3m1yfbwvn3nxx",
+        "event_type": "message_completed",
+        "occurred_at": "2025-09-16T12:05:00Z",
+        "data": {
+          "model": "gpt-4-1",
+          "input_tokens": 2353,
+          "output_tokens": 34697
+        }
+      }
+    ]
+  }'
+```
+
+<Accordion title="Check the Wallet Balance">
+  A wallet is created automatically on the first top-up - no extra calls required.
+
+  Wallets can contain multiple sub-accounts, one per asset or currency type.
+
+  ```bash
+  curl https://api.dev.credyt.ai/customers/cust_473cr1y0ghbyc3m1yfbwvn3nxx/wallet \
+    -H "X-CREDYT-KEY: sk_test_123"
+  
+  ```
+
+  ➡️ Response (simplified):
+
+  ```json
+  {
+    "accounts": [
+      { "id": "default:usd", "available": 46.47 }
+    ]
+  }
+  
+  ```
+
+  ---
 </Accordion>
 
 ## Next steps
@@ -56,23 +145,18 @@ Get your documentation site running locally and make your first customization.
 Now that you have your docs running, explore these key features:
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
+    Learn MDX syntax and start writing your documentation.
+  </Card>
+  <Card title="Customize style" icon="palette" href="/essentials/settings">
+    Make your docs match your brand perfectly.
+  </Card>
+  <Card title="Add code examples" icon="square-code" href="/essentials/code">
+    Include syntax-highlighted code blocks.
+  </Card>
+  <Card title="API documentation" icon="code" href="/api-reference/introduction">
+    Auto-generate API docs from OpenAPI specs.
+  </Card>
 </CardGroup>
 
 <Note>
