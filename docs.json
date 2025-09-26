@@ -18,9 +18,7 @@
             "pages": [
               "index",
               "quickstart",
-              "development",
-              "billing-portal-and-topups",
-              "advanced-integration"
+              "development"
             ]
           },
           {
@@ -49,32 +47,26 @@
           }
         ]
       },
-    {
-  "tab": "API reference",
-  "groups": [
-    {
-      "group": "API documentation",
-      "pages": [
-        {
-          "title": "API Reference",
-          "path": "api",
-          "type": "api",
-          "specPath": "api-reference/openapi.json"
-        }
-      ]
-    },
-    {
-      "group": "Endpoint examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete",
-        "api-reference/endpoint/webhook"
-      ]
-    }
-  ]
-}
-
+      {
+        "tab": "API reference",
+        "groups": [
+          {
+            "group": "API documentation",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Endpoint examples",
+            "pages": [
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/delete",
+              "api-reference/endpoint/webhook"
+            ]
+          }
+        ]
+      }
     ],
     "global": {
       "anchors": [
